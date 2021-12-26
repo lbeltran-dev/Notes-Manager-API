@@ -90,6 +90,11 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<jvmArguments>
+            			-Xss10240m
+       				 </jvmArguments>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>com.heroku.sdk</groupId>
@@ -102,7 +107,9 @@
 				<version>3.8.1</version>
 				<configuration>
 					<source>14</source>
-					<target>14</target>
+					<compilerArgs>
+						<arg>-Xss10240m</arg>
+					</compilerArgs>
 					<annotationProcessorPaths>
 						<path>
 							<groupId>org.projectlombok</groupId>
