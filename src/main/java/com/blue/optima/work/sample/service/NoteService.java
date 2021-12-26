@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.blue.optima.work.sample.collection.NoteCollection;
 import com.blueoptima.work.sample.EntityNotFoundException;
 import com.blueoptima.work.sample.entity.Note;
 import com.blueoptima.work.sample.repository.INoteRepo;
