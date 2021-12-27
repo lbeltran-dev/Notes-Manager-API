@@ -2,14 +2,12 @@ package com.blue.optima.work.sample.service;
 
 import java.util.List;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.blueoptima.work.sample.EntityNotFoundException;
 import com.blueoptima.work.sample.entity.Note;
 import com.blueoptima.work.sample.repository.INoteRepo;
-
 
 @Service
 public class NoteService {
@@ -26,50 +24,63 @@ public class NoteService {
 	}
 
 	public Note createNote(Note note) {
+
+		if (note.getId() != null) {
+			if (noteRepo.findById(note.getId()).isPresent()) {
+				throw new IllegalArgumentException("id already exists");
+			}
+		}
 		return noteRepo.save(note);
 	}
 
 	public List<Note> getNoteCollection() {
 		return noteRepo.findAll();
 	}
-	
+
 	public Note updateNote(Long noteId, Note tempNote) {
+		if(tempNote.getId() != null && tempNote.getId() != noteId) {
+			throw new IllegalArgumentException("id must be the same as the request parameter");
+		}
 		Note note = noteRepo.findById(noteId).orElse(null);
-		if(note == null) {
+		if (note == null) {
 			throw new EntityNotFoundException(Note.class, "id", noteId.toString());
 		}
 		tempNote.setId(noteId);
 		noteRepo.save(tempNote);
 		return noteRepo.findById(noteId).get();
 	}
-	
+
 	public String deleteNotes() {
-		if(noteRepo.count() == 0) return "Database already empty";
+		if (noteRepo.count() == 0)
+			return "Database already empty";
 		noteRepo.deleteAll();
-		
+
 		return "Notes deleted successfully";
 	}
-	
+
 	public String deleteNote(Long noteId) {
 		Note note = noteRepo.findById(noteId).orElse(null);
 		if (note == null) {
 			throw new EntityNotFoundException(Note.class, "id", noteId.toString());
 		}
-		
+
 		noteRepo.delete(note);
 		return "Note deleted successfully";
 	}
-	
+
 	public String updateNotes(List<Note> notes) {
-		for(Note note: notes) {
+		if(notes.isEmpty()) {
+			throw new IllegalArgumentException("Can not update empty list of notes");
+		}
+		for (Note note : notes) {
 			Note tempNote = noteRepo.findById(note.getId()).orElse(null);
-			if(tempNote == null) {
+			if (tempNote == null) {
 				throw new EntityNotFoundException(Note.class, "id", note.getId().toString());
 			}
-			
+
 			noteRepo.save(note);
 		}
-		
+
 		return "Notes updated successfully";
 	}
 }
